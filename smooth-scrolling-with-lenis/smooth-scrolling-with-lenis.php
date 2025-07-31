@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name: Smooth scrolling with Lenis
  * Description: Adds the Lenis library (by darkroom.engineering) to your WordPress page
- * Version:     1.2.0
+ * Version:     1.3.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Michael Gangolf
@@ -57,7 +57,8 @@ function miga_smooth_scrolling_enqueue_scripts()
           "miga_smooth_scrolling_anchor_offset" => esc_attr(get_option('miga_smooth_scrolling_anchor_offset')),
           "miga_smooth_scrolling_lerp" => esc_attr(get_option('miga_smooth_scrolling_lerp')),
           "miga_smooth_scrolling_duration" => esc_attr(get_option('miga_smooth_scrolling_duration')),
-          "miga_smooth_scrolling_anchor" => (get_option('miga_smooth_scrolling_anchor_links') == "yes")
+          "miga_smooth_scrolling_anchor" => (get_option('miga_smooth_scrolling_anchor_links') == "yes"),
+          "miga_smooth_scrolling_gsap" => (get_option('miga_smooth_scrolling_gsap') == "yes")
         ]);
 
     }
@@ -105,9 +106,17 @@ function miga_smooth_scrolling_fields()
         $page_slug
     );
 
+    if ( get_option( 'miga_smooth_scrolling_gsap' ) === false )
+        update_option( 'miga_smooth_scrolling_gsap', 'no' );
+    if ( get_option( 'miga_smooth_scrolling_disable_wheel' ) === false )
+        update_option( 'miga_smooth_scrolling_disable_wheel', 'no' );
+    if ( get_option( 'miga_smooth_scrolling_anchor_links' ) === false )
+        update_option( 'miga_smooth_scrolling_anchor_links', 'no' );
+
     register_setting($option_group, 'miga_smooth_scrolling_disable_wheel', 'miga_smooth_scrolling_sanitize_checkbox');
     register_setting($option_group, 'miga_smooth_scrolling_exclude_page', 'miga_smooth_scrolling_sanitize_exclude_page');
     register_setting($option_group, 'miga_smooth_scrolling_anchor_links', 'miga_smooth_scrolling_sanitize_checkbox');
+    register_setting($option_group, 'miga_smooth_scrolling_gsap', 'miga_smooth_scrolling_sanitize_checkbox');
     register_setting($option_group, 'miga_smooth_scrolling_anchor_offset', 'miga_smooth_scrolling_sanitize_value');
     register_setting($option_group, 'miga_smooth_scrolling_lerp', 'miga_smooth_scrolling_sanitize_lerp');
     register_setting($option_group, 'miga_smooth_scrolling_duration', 'miga_smooth_scrolling_sanitize_float');
@@ -133,6 +142,14 @@ function miga_smooth_scrolling_fields()
         'miga_smooth_scrolling_anchor_links', // id
         'Smooth anchor links', // title
         'miga_smooth_scrolling_anchor_links_callback', // callback
+        $page_slug,
+        'miga_smooth_scrolling_id'
+    );
+
+    add_settings_field(
+        'miga_smooth_scrolling_gsap', // id
+        'Synchronize with GSAP/ScrollTrigger', // title
+        'miga_smooth_scrolling_gsap_callback', // callback
         $page_slug,
         'miga_smooth_scrolling_id'
     );
@@ -177,6 +194,16 @@ function miga_smooth_scrolling_anchor_links_callback($args)
     ?>
 <label>
   <input type="checkbox" name="miga_smooth_scrolling_anchor_links" <?php checked(esc_attr($value), 'yes') ?> /> Yes
+</label>
+<?php
+}
+
+function miga_smooth_scrolling_gsap_callback($args)
+{
+    $value = get_option('miga_smooth_scrolling_gsap');
+    ?>
+<label>
+  <input type="checkbox" name="miga_smooth_scrolling_gsap" <?php checked(esc_attr($value), 'yes') ?>/> Yes
 </label>
 <?php
 }

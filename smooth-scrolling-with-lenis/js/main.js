@@ -29,6 +29,14 @@ function smoothScrollReady() {
 		}
 
 		requestAnimationFrame(raf);
+		if (miga_smooth_scrolling_params.miga_smooth_scrolling_gsap && typeof gsap != "undefined" && typeof ScrollTrigger != "undefined") {
+			// add gsap if enabled and availabe
+			lenis.on('scroll', ScrollTrigger.update);
+			gsap.ticker.add((time) => {
+				lenis.raf(time * 1000);
+			});
+			gsap.ticker.lagSmoothing(0);
+		}
 
 		if (miga_smooth_scrolling_params.miga_smooth_scrolling_anchor) {
 			document.querySelectorAll("a").forEach(function(item) {

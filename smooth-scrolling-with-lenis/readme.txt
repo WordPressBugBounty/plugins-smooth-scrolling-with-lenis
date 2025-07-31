@@ -1,13 +1,15 @@
 === Smooth scrolling with Lenis ===
 Contributors: migaweb
-Tags: lenis, scroll, smooth
+Tags: lenis, scroll, smooth, scrolling
 Donate link: https://www.buymeacoffee.com/miga
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
+
+Adds the Lenis library (by darkroom.engineering) to your WordPress page. Simply enable the plugin and it will add the library to your page.
 
 == Description ==
 
@@ -26,6 +28,10 @@ Credits:
 * Some settings are under "Settings - Lenis"
 
 == Changelog ==
+
+1.3.0
+* update lenis to 1.3.8
+* add "Synchronize with GSAP/ScrollTrigger" checkbox to the settings
 
 1.2.0
 * update lenis to 1.3.4
