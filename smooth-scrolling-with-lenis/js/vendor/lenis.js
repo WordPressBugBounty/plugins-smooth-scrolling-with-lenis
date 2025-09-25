@@ -1,5 +1,5 @@
 // package.json
-var version = "1.3.8";
+var version = "1.3.11";
 
 // packages/core/src/maths.ts
 function clamp(min, input, max) {
@@ -403,7 +403,7 @@ var Lenis = class {
     infinite = false,
     orientation = "vertical",
     // vertical, horizontal
-    gestureOrientation = "vertical",
+    gestureOrientation = orientation === "horizontal" ? "both" : "vertical",
     // vertical, horizontal, both
     touchMultiplier = 1,
     wheelMultiplier = 1,
@@ -628,7 +628,7 @@ var Lenis = class {
     } else if (this.options.gestureOrientation === "horizontal") {
       delta = deltaX;
     }
-    if (!this.options.overscroll || this.options.infinite || this.options.wrapper !== window && (this.animatedScroll > 0 && this.animatedScroll < this.limit || this.animatedScroll === 0 && deltaY > 0 || this.animatedScroll === this.limit && deltaY < 0)) {
+    if (!this.options.overscroll || this.options.infinite || this.options.wrapper !== window && this.limit > 0 && (this.animatedScroll > 0 && this.animatedScroll < this.limit || this.animatedScroll === 0 && deltaY > 0 || this.animatedScroll === this.limit && deltaY < 0)) {
       event.lenisStopPropagation = true;
     }
     if (event.cancelable) {

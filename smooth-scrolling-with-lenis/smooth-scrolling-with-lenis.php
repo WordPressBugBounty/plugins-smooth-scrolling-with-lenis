@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name: Smooth scrolling with Lenis
  * Description: Adds the Lenis library (by darkroom.engineering) to your WordPress page
- * Version:     1.3.0
+ * Version:     1.4.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Michael Gangolf
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('MIGA_SMOOTH_SCROLLING_LENIS_VERSION')) {
-    define('MIGA_SMOOTH_SCROLLING_LENIS_VERSION', '1.3.4');
+    define('MIGA_SMOOTH_SCROLLING_LENIS_VERSION', '1.3.11');
 }
 
 function miga_smooth_scrolling_enqueue_scripts()

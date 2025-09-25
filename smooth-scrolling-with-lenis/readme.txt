@@ -3,8 +3,8 @@ Contributors: migaweb
 Tags: lenis, scroll, smooth, scrolling
 Donate link: https://www.buymeacoffee.com/miga
 Requires at least: 5.0
-Tested up to: 6.7
-Stable tag: 1.3.0
+Tested up to: 6.8
+Stable tag: 1.4.0
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -28,6 +28,9 @@ Credits:
 * Some settings are under "Settings - Lenis"
 
 == Changelog ==
+
+1.4.0
+* update lenis to 1.3.11
 
 1.3.0
 * update lenis to 1.3.8
