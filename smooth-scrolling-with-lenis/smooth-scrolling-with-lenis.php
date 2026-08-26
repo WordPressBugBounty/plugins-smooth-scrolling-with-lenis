@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name: Smooth scrolling with Lenis
  * Description: Adds the Lenis library (by darkroom.engineering) to your WordPress page
- * Version:     1.6.0
+ * Version:     1.7.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Michael Gangolf
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('MIGA_SMOOTH_SCROLLING_LENIS_VERSION')) {
-    define('MIGA_SMOOTH_SCROLLING_LENIS_VERSION', '1.3.18');
+    define('MIGA_SMOOTH_SCROLLING_LENIS_VERSION', '1.3.26');
 }
 
 function miga_smooth_scrolling_enqueue_scripts()
@@ -49,6 +49,7 @@ function miga_smooth_scrolling_enqueue_scripts()
         if (get_option('miga_smooth_scrolling_disable_wheel') == "yes") {
             $smoothWheel = 0;
         }
+        $preventList = array_values(array_filter(array_map('trim', explode("\n", (string) get_option('miga_smooth_scrolling_prevent', '')))));
         wp_enqueue_style('theme-lenis-style', plugin_dir_url(__FILE__) .  'style.css', [], MIGA_SMOOTH_SCROLLING_LENIS_VERSION);
         wp_enqueue_script('theme-lenis', plugin_dir_url(__FILE__) . 'js/vendor/lenis.min.js', [], MIGA_SMOOTH_SCROLLING_LENIS_VERSION, false);
         wp_enqueue_script('theme-main', plugin_dir_url(__FILE__) . 'js/main.js', [], MIGA_SMOOTH_SCROLLING_LENIS_VERSION, ['in_footer' => true]);
@@ -58,7 +59,8 @@ function miga_smooth_scrolling_enqueue_scripts()
           "miga_smooth_scrolling_lerp" => esc_attr(get_option('miga_smooth_scrolling_lerp')),
           "miga_smooth_scrolling_duration" => esc_attr(get_option('miga_smooth_scrolling_duration')),
           "miga_smooth_scrolling_anchor" => (get_option('miga_smooth_scrolling_anchor_links') == "yes"),
-          "miga_smooth_scrolling_gsap" => (get_option('miga_smooth_scrolling_gsap') == "yes")
+          "miga_smooth_scrolling_gsap" => (get_option('miga_smooth_scrolling_gsap') == "yes"),
+          "miga_smooth_scrolling_prevent" => $preventList
         ]);
 
     }
@@ -123,6 +125,7 @@ function miga_smooth_scrolling_fields()
     register_setting($option_group, 'miga_smooth_scrolling_anchor_offset', 'miga_smooth_scrolling_sanitize_value');
     register_setting($option_group, 'miga_smooth_scrolling_lerp', 'miga_smooth_scrolling_sanitize_lerp');
     register_setting($option_group, 'miga_smooth_scrolling_duration', 'miga_smooth_scrolling_sanitize_float');
+    register_setting($option_group, 'miga_smooth_scrolling_prevent', 'miga_smooth_scrolling_sanitize_prevent');
 
 
     add_settings_field(
@@ -174,6 +177,13 @@ function miga_smooth_scrolling_fields()
         'miga_smooth_scrolling_duration', // id
         'Duration of scroll animation<br/><small style="font-weight:normal;">Set lerp to 0 to use this value</small>', // title
         'miga_smooth_scrolling_duration_callback', // callback
+        $page_slug,
+        'miga_smooth_scrolling_id'
+    );
+    add_settings_field(
+        'miga_smooth_scrolling_prevent', // id
+        'Prevent smooth scrolling on these elements<br/><small style="font-weight:normal;">One id (#modal) or class (.popup) per line</small>', // title
+        'miga_smooth_scrolling_prevent_callback', // callback
         $page_slug,
         'miga_smooth_scrolling_id'
     );
@@ -264,6 +274,16 @@ function miga_smooth_scrolling_exclude_page_callback()
     echo '</select>';
 }
 
+function miga_smooth_scrolling_prevent_callback($args)
+{
+    $value = get_option('miga_smooth_scrolling_prevent', '');
+    ?>
+<label>
+  <textarea name="miga_smooth_scrolling_prevent" id="miga_smooth_scrolling_prevent" rows="6" cols="40" placeholder="#modal&#10;.popup"><?php echo esc_textarea($value); ?></textarea>
+</label>
+<?php
+}
+
 function miga_smooth_scrolling_sanitize_checkbox($value)
 {
     return 'on' == $value ? 'yes' : 'no';
@@ -287,6 +307,18 @@ function miga_smooth_scrolling_sanitize_lerp($value)
 function miga_smooth_scrolling_sanitize_float($value)
 {
     return (float)$value;
+}
+function miga_smooth_scrolling_sanitize_prevent($value)
+{
+    $lines = explode("\n", (string)$value);
+    $clean = [];
+    foreach ($lines as $line) {
+        $line = preg_replace('/[^A-Za-z0-9_\-#.]/', '', trim($line));
+        if ($line !== '') {
+            $clean[] = $line;
+        }
+    }
+    return implode("\n", $clean);
 }
 
 add_action('admin_menu', 'miga_smooth_scrolling_menu');

@@ -2,10 +2,10 @@
 Contributors: migaweb
 Tags: lenis, scroll, smooth, scrolling
 Donate link: https://www.buymeacoffee.com/miga
-Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.6.0
-Requires PHP: 7.0
+Requires at least: 5.2
+Tested up to: 7.1
+Stable tag: 1.7.0
+Requires PHP: 7.2
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
@@ -28,6 +28,10 @@ Credits:
 * Some settings are under "Settings - Lenis"
 
 == Changelog ==
+
+1.7.0
+* update lenis to 1.3.26
+* new setting: prevent smooth scrolling on elements by id/class (one per line)
 
 1.6.0
 * update lenis to 1.3.18

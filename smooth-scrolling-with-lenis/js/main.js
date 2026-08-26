@@ -10,6 +10,19 @@ function smoothScrollReady() {
 			smoothWheel: parseInt(miga_smooth_scrolling_params.miga_smooth_scrolling_smoothWheel)
 		};
 
+		const preventList = miga_smooth_scrolling_params.miga_smooth_scrolling_prevent || [];
+		if (preventList.length > 0) {
+			lenisSettings.prevent = (node) => preventList.some(function(entry) {
+				if (entry[0] === "#") {
+					return node.id === entry.slice(1);
+				}
+				if (entry[0] === ".") {
+					return node.classList && node.classList.contains(entry.slice(1));
+				}
+				return node.id === entry || (node.classList && node.classList.contains(entry));
+			});
+		}
+
 		if (miga_smooth_scrolling_params.miga_smooth_scrolling_lerp > 0) {
 			lenisSettings.lerp = parseFloat(miga_smooth_scrolling_params.miga_smooth_scrolling_lerp);
 		} else if (miga_smooth_scrolling_params.miga_smooth_scrolling_duration > 0) {
